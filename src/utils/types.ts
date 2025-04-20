@@ -16,38 +16,49 @@ export enum CubeColor {
   Orange = "orange",
 }
 
-export enum RotationDirection {
+export enum Move {
+  U = "U",
+  UPrime = "U'",
+  D = "D",
+  DPrime = "D'",
+  L = "L",
+  LPrime = "L'",
+  R = "R",
+  RPrime = "R'",
+  F = "F",
+  FPrime = "F'",
+  B = "B",
+  BPrime = "B'",
+}
+
+export enum RotationDirection { 
   Clockwise = "clockwise",
   CounterClockwise = "counterclockwise",
 }
+
+  export enum CubeRotation {
+  X = "X",
+  Y = "Y",
+  Z = "Z",
+}
+
+export type MoveDefinition = {
+  face: CubeFace;
+  direction: RotationDirection;
+  count?: number
+};
 
 export type Cube = {
   [faces in CubeFace]: CubeFaceData;
 };
 
-export type CubeMove = {
-  face: CubeFace;
-  direction: RotationDirection;
-};
-
 type CubeFaceData = {
   stickers: CubeColor[][]; // 2D array representing a 3x3 grid of colors
   face: CubeFace;
-  metadata: CubeMetadata;
+  metadata?: CubeMetadata;
 };
 
 type CubeMetadata = {
-  id: string; // Unique identifier for the cube state
-  moveHistory: CubeMove[]; // Array of moves made to reach this state
+  id: string;
+  moveHistory: Move[];
 };
-
-// we wont use this for now
-//
-// export enum Move {
-//   Up = "U",
-//   Down = "D",
-//   Left = "L",
-//   Right = "R",
-//   Front = "F",
-//   Back = "B",
-// }

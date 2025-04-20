@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from "bun:test";
 
 import { RubikCube } from "@src/core/cube";
-import { CubeFace, CubeColor } from "@src/utils/types";
+import { CubeFace, CubeColor, Move, RotationDirection } from "@src/utils/types";
 
 describe("RubikCube", () => {
   let originalConsoleLog: (...args: any[]) => void;
@@ -91,7 +91,6 @@ describe("RubikCube", () => {
   it("should not be in a solved state if the cube state is modified", () => {
     const cube = new RubikCube();
 
-    // Modify the state of the cube
     const frontFace = cube["state"].get(CubeFace.Front);
     if (frontFace) {
       frontFace[0][0] = CubeColor.Red;
@@ -99,4 +98,81 @@ describe("RubikCube", () => {
 
     expect(cube.isSolved()).toBe(false);
   });
+
+  it("the moves should be mapped to the correct cube face and rotation direction", () => {
+    const cube = new RubikCube();
+    const moves = [
+      {
+        move: Move.B,
+        expectedFace: CubeFace.Back,
+        expectedDirection: RotationDirection.Clockwise,
+      },
+      {
+        move: Move.BPrime,
+        expectedFace: CubeFace.Back,
+        expectedDirection: RotationDirection.CounterClockwise,
+      },
+      {
+        move: Move.D,
+        expectedFace: CubeFace.Bottom,
+        expectedDirection: RotationDirection.Clockwise,
+      },
+      {
+        move: Move.DPrime,
+        expectedFace: CubeFace.Bottom,
+        expectedDirection: RotationDirection.CounterClockwise,
+      },
+      {
+        move: Move.L,
+        expectedFace: CubeFace.Left,
+        expectedDirection: RotationDirection.Clockwise,
+      },
+      {
+        move: Move.LPrime,
+        expectedFace: CubeFace.Left,
+        expectedDirection: RotationDirection.CounterClockwise,
+      },
+      {
+        move: Move.R,
+        expectedFace: CubeFace.Right,
+        expectedDirection: RotationDirection.Clockwise,
+      },
+      {
+        move: Move.RPrime,
+        expectedFace: CubeFace.Right,
+        expectedDirection: RotationDirection.CounterClockwise,
+      },
+      {
+        move: Move.F,
+        expectedFace: CubeFace.Front,
+        expectedDirection: RotationDirection.Clockwise,
+      },
+      {
+        move: Move.FPrime,
+        expectedFace: CubeFace.Front,
+        expectedDirection: RotationDirection.CounterClockwise,
+      },
+      {
+        move: Move.U,
+        expectedFace: CubeFace.Top,
+        expectedDirection: RotationDirection.Clockwise,
+      },
+      {
+        move: Move.UPrime,
+        expectedFace: CubeFace.Top,
+        expectedDirection: RotationDirection.CounterClockwise,
+      },
+    ];
+    moves.forEach(({ move, expectedFace, expectedDirection }) => {
+      const { face, direction } = cube.mapMoveToFaceAndDirection(move);
+      expect(face).toBe(expectedFace);
+      expect(direction).toBe(expectedDirection);
+    });
+  });
+    
+    it('the state of the cube should be returned properly', () => {
+        const cube = new RubikCube();
+        const state = cube.getState();
+        expect(state).toEqual(cube["state"]);
+    })
 });

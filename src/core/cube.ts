@@ -1,4 +1,10 @@
-import { CubeFace, CubeColor } from "@src/utils/types";
+import {
+  CubeFace,
+  CubeColor,
+  Move,
+  MoveDefinition,
+  RotationDirection,
+} from "@src/utils/types";
 
 export class RubikCube {
   private state: Map<CubeFace, CubeColor[][]>;
@@ -24,12 +30,42 @@ export class RubikCube {
    */
   private initializeCube(): void {
     this.state = new Map<CubeFace, CubeColor[][]>([
-      [CubeFace.Front, Array(3).fill(Array(3).fill(CubeColor.Green))],
-      [CubeFace.Back, Array(3).fill(Array(3).fill(CubeColor.Blue))],
-      [CubeFace.Left, Array(3).fill(Array(3).fill(CubeColor.Orange))],
-      [CubeFace.Right, Array(3).fill(Array(3).fill(CubeColor.Red))],
-      [CubeFace.Top, Array(3).fill(Array(3).fill(CubeColor.White))],
-      [CubeFace.Bottom, Array(3).fill(Array(3).fill(CubeColor.Yellow))],
+      [
+        CubeFace.Front,
+        Array(3)
+          .fill(0)
+          .map(() => Array(3).fill(CubeColor.Green)),
+      ],
+      [
+        CubeFace.Back,
+        Array(3)
+          .fill(0)
+          .map(() => Array(3).fill(CubeColor.Blue)),
+      ],
+      [
+        CubeFace.Left,
+        Array(3)
+          .fill(0)
+          .map(() => Array(3).fill(CubeColor.Orange)),
+      ],
+      [
+        CubeFace.Right,
+        Array(3)
+          .fill(0)
+          .map(() => Array(3).fill(CubeColor.Red)),
+      ],
+      [
+        CubeFace.Top,
+        Array(3)
+          .fill(0)
+          .map(() => Array(3).fill(CubeColor.White)),
+      ],
+      [
+        CubeFace.Bottom,
+        Array(3)
+          .fill(0)
+          .map(() => Array(3).fill(CubeColor.Yellow)),
+      ],
     ]);
   }
 
@@ -37,7 +73,7 @@ export class RubikCube {
    * Checks if the cube is in a solved state.
    */
   public isSolved(): boolean {
-    for (const [, stickers] of this.state.entries()) {
+    for (const [_, stickers] of this.state.entries()) {
       const color = stickers[0][0];
       for (const row of stickers) {
         if (row.some((sticker) => sticker !== color)) {
@@ -47,4 +83,72 @@ export class RubikCube {
     }
     return true;
   }
+
+  /**
+   * Maps moves to cube face and rotation direction.
+   * @param move - The move to be mapped.
+   * @returns An object containing the cube face and rotation direction.
+   */
+  public mapMoveToFaceAndDirection(move: Move): MoveDefinition {
+    const moveMap = this.getMoveMap();
+    return moveMap[move];
+  }
+
+  private getMoveMap(): Record<Move, MoveDefinition> {
+    return {
+      [Move.U]: {
+        face: CubeFace.Top,
+        direction: RotationDirection.Clockwise,
+      },
+      [Move.UPrime]: {
+        face: CubeFace.Top,
+        direction: RotationDirection.CounterClockwise,
+      },
+      [Move.D]: {
+        face: CubeFace.Bottom,
+        direction: RotationDirection.Clockwise,
+      },
+      [Move.DPrime]: {
+        face: CubeFace.Bottom,
+        direction: RotationDirection.CounterClockwise,
+      },
+      [Move.L]: {
+        face: CubeFace.Left,
+        direction: RotationDirection.Clockwise,
+      },
+      [Move.LPrime]: {
+        face: CubeFace.Left,
+        direction: RotationDirection.CounterClockwise,
+      },
+      [Move.R]: {
+        face: CubeFace.Right,
+        direction: RotationDirection.Clockwise,
+      },
+      [Move.RPrime]: {
+        face: CubeFace.Right,
+        direction: RotationDirection.CounterClockwise,
+      },
+      [Move.F]: {
+        face: CubeFace.Front,
+        direction: RotationDirection.Clockwise,
+      },
+      [Move.FPrime]: {
+        face: CubeFace.Front,
+        direction: RotationDirection.CounterClockwise,
+      },
+      [Move.B]: {
+        face: CubeFace.Back,
+        direction: RotationDirection.Clockwise,
+      },
+      [Move.BPrime]: {
+        face: CubeFace.Back,
+        direction: RotationDirection.CounterClockwise,
+      },
+    };
+  }
+
+  getState(): Map<CubeFace, CubeColor[][]> {
+    return this.state;
+  }
+
 }
