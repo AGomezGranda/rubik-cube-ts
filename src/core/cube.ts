@@ -3,14 +3,22 @@ import {
   CubeColor,
   Move,
   MoveDefinition,
-  RotationDirection,
+  RotationDirection, CubeMetadata,
 } from "@src/utils/types";
+import { randomUUIDv7 } from "bun";
+import {applyMove, scrambleCube} from "@src/core/moves";
 
 export class RubikCube {
-  private state: Map<CubeFace, CubeColor[][]>;
+  public state: Map<CubeFace, CubeColor[][]>;
+  public metadata: CubeMetadata = {
+    id: "",
+    moveHistory: []
+  }
 
   constructor() {
     this.state = new Map();
+    this.metadata.id = randomUUIDv7()
+    this.metadata.moveHistory = []
     this.initializeCube();
   }
 
@@ -151,4 +159,16 @@ export class RubikCube {
     return this.state;
   }
 
+  resetCube(): void {
+    this.initializeCube();
+    this.metadata.moveHistory = []
+  }
+
+  scramble(length: number = 20): void {
+    scrambleCube(this, length)
+  }
+
+  applyMove(move: Move): void {
+    applyMove(this, move)
+  }
 }

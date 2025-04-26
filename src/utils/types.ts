@@ -31,12 +31,12 @@ export enum Move {
   BPrime = "B'",
 }
 
-export enum RotationDirection { 
+export enum RotationDirection {
   Clockwise = "clockwise",
   CounterClockwise = "counterclockwise",
 }
 
-  export enum CubeRotation {
+export enum CubeRotation {
   X = "X",
   Y = "Y",
   Z = "Z",
@@ -45,20 +45,15 @@ export enum RotationDirection {
 export type MoveDefinition = {
   face: CubeFace;
   direction: RotationDirection;
-  count?: number
+  count?: number;
 };
 
-export type Cube = {
-  [faces in CubeFace]: CubeFaceData;
-};
-
-type CubeFaceData = {
+export type CubeFaceData = {
   stickers: CubeColor[][]; // 2D array representing a 3x3 grid of colors
   face: CubeFace;
-  metadata?: CubeMetadata;
 };
 
-type CubeMetadata = {
+export type CubeMetadata = {
   id: string;
   moveHistory: Move[];
 };

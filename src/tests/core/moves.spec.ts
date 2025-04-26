@@ -1,6 +1,6 @@
 import { RubikCube } from "@src/core/cube";
-import { applyMove } from "@src/core/moves";
-import { clone2DArray } from "@src/tests/utils";
+import {applyMove, scrambleCube, undoMove} from "@src/core/moves";
+import {clone2DArray, deepCopyMap} from "@src/tests/utils";
 import { CubeFace, Move } from "@src/utils/types";
 import { describe, beforeEach, it, expect } from "bun:test";
 
@@ -89,5 +89,35 @@ describe("RubikCube movement", () => {
     expect(newRightFace!.map((row) => row[0])).toEqual(expectedRightColumn);
     expect(newBottomFace![0]).toEqual(expectedBottomRow);
     expect(newLeftFace!.map((row) => row[2])).toEqual(expectedLeftColumn);
+  });
+
+  it('the movement history should be updated properly', () => {
+    const move = Move.L;
+    const moveHistory = cube.metadata.moveHistory;
+    expect(moveHistory.length).toBe(0);
+    applyMove(cube, move);
+    expect(moveHistory.length).toBe(1);
+    expect(moveHistory[0]).toBe(move);
+  });
+
+  it('should undo the last movement', () => {
+    const move1 = Move.L;
+    applyMove(cube, move1);
+    const move2 = Move.F;
+    applyMove(cube, move2);
+    const moveHistory = cube.metadata.moveHistory;
+    expect(moveHistory.length).toBe(2);
+    undoMove(cube);
+    expect(moveHistory.length).toBe(1);
+    expect(moveHistory[0]).toBe(move1);
+  });
+
+  it('should generate a list of 20 movements for scramble the cube', () => {
+    const originalState = deepCopyMap(cube.getState())
+    scrambleCube(cube, 20)
+    const moveHistory = cube.metadata.moveHistory;
+    expect(moveHistory.length).toBe(20);
+    const newState = cube.getState();
+    expect(newState).not.toEqual(originalState);
   });
 });

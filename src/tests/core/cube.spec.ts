@@ -2,6 +2,8 @@ import { afterEach, beforeEach, describe, expect, it } from "bun:test";
 
 import { RubikCube } from "@src/core/cube";
 import { CubeFace, CubeColor, Move, RotationDirection } from "@src/utils/types";
+import {applyMove} from "@src/core/moves";
+import {deepCopyMap} from "@tests/utils";
 
 describe("RubikCube", () => {
   let originalConsoleLog: (...args: any[]) => void;
@@ -22,22 +24,22 @@ describe("RubikCube", () => {
   it("should initialize with the correct state", () => {
     const cube = new RubikCube();
 
-    expect(cube["state"].get(CubeFace.Front)).toEqual(
+    expect(cube.state.get(CubeFace.Front)).toEqual(
       Array(3).fill(Array(3).fill(CubeColor.Green))
     );
-    expect(cube["state"].get(CubeFace.Back)).toEqual(
+    expect(cube.state.get(CubeFace.Back)).toEqual(
       Array(3).fill(Array(3).fill(CubeColor.Blue))
     );
-    expect(cube["state"].get(CubeFace.Left)).toEqual(
+    expect(cube.state.get(CubeFace.Left)).toEqual(
       Array(3).fill(Array(3).fill(CubeColor.Orange))
     );
-    expect(cube["state"].get(CubeFace.Right)).toEqual(
+    expect(cube.state.get(CubeFace.Right)).toEqual(
       Array(3).fill(Array(3).fill(CubeColor.Red))
     );
-    expect(cube["state"].get(CubeFace.Top)).toEqual(
+    expect(cube.state.get(CubeFace.Top)).toEqual(
       Array(3).fill(Array(3).fill(CubeColor.White))
     );
-    expect(cube["state"].get(CubeFace.Bottom)).toEqual(
+    expect(cube.state.get(CubeFace.Bottom)).toEqual(
       Array(3).fill(Array(3).fill(CubeColor.Yellow))
     );
   });
@@ -91,7 +93,7 @@ describe("RubikCube", () => {
   it("should not be in a solved state if the cube state is modified", () => {
     const cube = new RubikCube();
 
-    const frontFace = cube["state"].get(CubeFace.Front);
+    const frontFace = cube.state.get(CubeFace.Front);
     if (frontFace) {
       frontFace[0][0] = CubeColor.Red;
     }
@@ -99,7 +101,7 @@ describe("RubikCube", () => {
     expect(cube.isSolved()).toBe(false);
   });
 
-  it("the moves should be mapped to the correct cube face and rotation direction", () => {
+  it("should map the moves to the correct cube face and rotation direction", () => {
     const cube = new RubikCube();
     const moves = [
       {
@@ -169,10 +171,29 @@ describe("RubikCube", () => {
       expect(direction).toBe(expectedDirection);
     });
   });
-    
-    it('the state of the cube should be returned properly', () => {
+
+  it('should return the state of the cube properly', () => {
         const cube = new RubikCube();
         const state = cube.getState();
-        expect(state).toEqual(cube["state"]);
-    })
+        expect(state).toEqual(cube.state);
+    });
+
+  it('should reset the cube state and movement history', () => {
+    const cube = new RubikCube();
+    const originalState = deepCopyMap(cube.getState())
+    cube.applyMove(Move.F);
+    cube.resetCube()
+    const resetState = cube.getState();
+    expect(resetState).toEqual(originalState);
+    expect(cube.metadata.moveHistory.length).toBe(0);
+  });
+
+  it('should scramble the cube', () => {
+    const cube = new RubikCube();
+    const originalState = deepCopyMap(cube.getState())
+    cube.scramble(20)
+    const newState = cube.getState();
+    expect(cube.metadata.moveHistory.length).toBe(20);
+    expect(newState).not.toEqual(originalState);
+  });
 });
