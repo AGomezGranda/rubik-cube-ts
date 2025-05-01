@@ -2,8 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from "bun:test";
 
 import { RubikCube } from "@src/core/cube";
 import { CubeFace, CubeColor, Move, RotationDirection } from "@src/utils/types";
-import {applyMove} from "@src/core/moves";
-import {deepCopyMap} from "@tests/utils";
+import { deepCopyMap } from "@tests/utils";
 
 describe("RubikCube", () => {
   let originalConsoleLog: (...args: any[]) => void;
@@ -172,26 +171,26 @@ describe("RubikCube", () => {
     });
   });
 
-  it('should return the state of the cube properly', () => {
-        const cube = new RubikCube();
-        const state = cube.getState();
-        expect(state).toEqual(cube.state);
-    });
-
-  it('should reset the cube state and movement history', () => {
+  it("should return the state of the cube properly", () => {
     const cube = new RubikCube();
-    const originalState = deepCopyMap(cube.getState())
+    const state = cube.getState();
+    expect(state).toEqual(cube.state);
+  });
+
+  it("should reset the cube state and movement history", () => {
+    const cube = new RubikCube();
+    const originalState = deepCopyMap(cube.getState());
     cube.applyMove(Move.F);
-    cube.resetCube()
+    cube.resetCube();
     const resetState = cube.getState();
     expect(resetState).toEqual(originalState);
     expect(cube.metadata.moveHistory.length).toBe(0);
   });
 
-  it('should scramble the cube', () => {
+  it("should scramble the cube", () => {
     const cube = new RubikCube();
-    const originalState = deepCopyMap(cube.getState())
-    cube.scramble(20)
+    const originalState = deepCopyMap(cube.getState());
+    cube.scramble(20);
     const newState = cube.getState();
     expect(cube.metadata.moveHistory.length).toBe(20);
     expect(newState).not.toEqual(originalState);

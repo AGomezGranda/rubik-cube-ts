@@ -36,21 +36,25 @@ export enum RotationDirection {
   CounterClockwise = "counterclockwise",
 }
 
-export enum CubeRotation {
+export enum Axis {
   X = "X",
   Y = "Y",
   Z = "Z",
+}
+
+export interface OrientationState {
+  front: CubeFace;
+  back: CubeFace;
+  left: CubeFace;
+  right: CubeFace;
+  top: CubeFace;
+  bottom: CubeFace;
 }
 
 export type MoveDefinition = {
   face: CubeFace;
   direction: RotationDirection;
   count?: number;
-};
-
-export type CubeFaceData = {
-  stickers: CubeColor[][]; // 2D array representing a 3x3 grid of colors
-  face: CubeFace;
 };
 
 export type CubeMetadata = {

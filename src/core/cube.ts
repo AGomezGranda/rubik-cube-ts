@@ -1,25 +1,53 @@
+/*
+Functions to include:
+- map moves to cube face and rotation direction [x]
+- rotate face clockwise and counterclockwise [x]
+
+Rotate the entire cube:
+- rotate cube axis []
+
+Other functions to take into consideration:
+- undo last move [x]
+- list move history [x]
+- reset cube to solved state [x]
+- scramble cube [x]
+*/
+
 import {
-  CubeFace,
+  Axis,
   CubeColor,
+  CubeFace,
+  CubeMetadata,
   Move,
   MoveDefinition,
-  RotationDirection, CubeMetadata,
+  OrientationState,
+  RotationDirection,
 } from "@src/utils/types";
 import { randomUUIDv7 } from "bun";
-import {applyMove, scrambleCube} from "@src/core/moves";
+import { applyMove, scrambleCube } from "@src/core/moves";
+import { applyRotation } from "@src/core/rotation";
 
 export class RubikCube {
   public state: Map<CubeFace, CubeColor[][]>;
   public metadata: CubeMetadata = {
     id: "",
-    moveHistory: []
-  }
+    moveHistory: [],
+  };
+  public orientation: OrientationState;
 
   constructor() {
     this.state = new Map();
-    this.metadata.id = randomUUIDv7()
-    this.metadata.moveHistory = []
+    this.metadata.id = randomUUIDv7();
+    this.metadata.moveHistory = [];
     this.initializeCube();
+    this.orientation = {
+      top: CubeFace.Top,
+      bottom: CubeFace.Bottom,
+      left: CubeFace.Left,
+      right: CubeFace.Right,
+      front: CubeFace.Front,
+      back: CubeFace.Back,
+    };
   }
 
   /**
@@ -161,14 +189,22 @@ export class RubikCube {
 
   resetCube(): void {
     this.initializeCube();
-    this.metadata.moveHistory = []
+    this.metadata.moveHistory = [];
   }
 
   scramble(length: number = 20): void {
-    scrambleCube(this, length)
+    scrambleCube(this, length);
   }
 
   applyMove(move: Move): void {
-    applyMove(this, move)
+    applyMove(this, move);
+  }
+
+  getOrientation(): OrientationState {
+    return this.orientation;
+  }
+
+  applyRotation(axis: Axis, direction: RotationDirection): void {
+    applyRotation(this, axis, direction);
   }
 }
