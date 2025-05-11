@@ -34,11 +34,11 @@
 		"baseUrl": "./",
 		"paths": {
 			"@src/*": ["src/*"],
-			"@tests/*": ["src/tests/*"]
+			"@tests/*": ["tests/*"]
 		}
 	},
 	"include": [
 		"typings/**/*",
-		"src/**/*",
+		"src/**/*", "tests",
 	]
 }

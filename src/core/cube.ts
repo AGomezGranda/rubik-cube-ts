@@ -4,7 +4,7 @@ Functions to include:
 - rotate face clockwise and counterclockwise [x]
 
 Rotate the entire cube:
-- rotate cube axis []
+- rotate cube axis [x]
 
 Other functions to take into consideration:
 - undo last move [x]
@@ -131,53 +131,55 @@ export class RubikCube {
   }
 
   private getMoveMap(): Record<Move, MoveDefinition> {
+    const currentOrientation = this.getOrientation();
+
     return {
       [Move.U]: {
-        face: CubeFace.Top,
+        face: currentOrientation.top,
         direction: RotationDirection.Clockwise,
       },
       [Move.UPrime]: {
-        face: CubeFace.Top,
+        face: currentOrientation.top,
         direction: RotationDirection.CounterClockwise,
       },
       [Move.D]: {
-        face: CubeFace.Bottom,
+        face: currentOrientation.bottom,
         direction: RotationDirection.Clockwise,
       },
       [Move.DPrime]: {
-        face: CubeFace.Bottom,
+        face: currentOrientation.bottom,
         direction: RotationDirection.CounterClockwise,
       },
       [Move.L]: {
-        face: CubeFace.Left,
+        face: currentOrientation.left,
         direction: RotationDirection.Clockwise,
       },
       [Move.LPrime]: {
-        face: CubeFace.Left,
+        face: currentOrientation.left,
         direction: RotationDirection.CounterClockwise,
       },
       [Move.R]: {
-        face: CubeFace.Right,
+        face: currentOrientation.right,
         direction: RotationDirection.Clockwise,
       },
       [Move.RPrime]: {
-        face: CubeFace.Right,
+        face: currentOrientation.right,
         direction: RotationDirection.CounterClockwise,
       },
       [Move.F]: {
-        face: CubeFace.Front,
+        face: currentOrientation.front,
         direction: RotationDirection.Clockwise,
       },
       [Move.FPrime]: {
-        face: CubeFace.Front,
+        face: currentOrientation.front,
         direction: RotationDirection.CounterClockwise,
       },
       [Move.B]: {
-        face: CubeFace.Back,
+        face: currentOrientation.back,
         direction: RotationDirection.Clockwise,
       },
       [Move.BPrime]: {
-        face: CubeFace.Back,
+        face: currentOrientation.back,
         direction: RotationDirection.CounterClockwise,
       },
     };
